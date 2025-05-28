@@ -26,10 +26,12 @@ onMounted(async () => {
   <div class="greetings">
     <h1 class="green">{{ msg }}</h1>
     <h3>
-      You've successfully created a project with
+      Welcome to my project built with
       <a href="https://vite.dev/" target="_blank" rel="noopener">Vite</a> +
       <a href="https://vuejs.org/" target="_blank" rel="noopener">Vue 3</a> +
-      <span class="api-message">{{ apiMessage }}</span>.
+      <a href="https://actix.rs" class="api-message">{{ apiMessage }}</a>.
+      <br><br>
+      Use the navigation bar to explore.
     </h3>
   </div>
 </template>
@@ -46,20 +48,9 @@ h3 {
   font-size: 1.2rem;
 }
 
-.greetings h1,
-.greetings h3 {
-  text-align: center;
-}
-
 .api-message {
   font-weight: bold;
   color: #42b883;
 }
 
-@media (min-width: 1024px) {
-  .greetings h1,
-  .greetings h3 {
-    text-align: left;
-  }
-}
 </style>

@@ -1,47 +1,50 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import NavBar from './components/NavBar.vue'
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+<main>
+  <NavBar/>
+  <div class="content">
+    <router-view/>
+  </div>
+</main>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-}
+<style >
+  @font-face {
+    font-family: 'Departure Mono';
+    src: url('@/assets/fonts/DepartureMono-Regular.woff2') format('woff2'),
+         url('@/assets/fonts/DepartureMono-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+  }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
+  html, body {
+    background-color: #111314;
+    color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+  }
+  
 
-@media (min-width: 1024px) {
-  header {
+  main {
     display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
+    flex-direction: column;
+    font-family: 'Departure Mono', monospace;
+    flex: 1 1 auto;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0;
+    border: 3px solid #f5f5f5;
+    padding-top: 6em;
+  }
+  
+  .content {
+    padding: 3px;
   }
 
-  .logo {
-    margin: 0 2rem 0 0;
-  }
 
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
 </style>

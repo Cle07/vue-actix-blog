@@ -3,27 +3,12 @@ use actix_web::{App, HttpServer, Result, get, middleware, web};
 use std::io;
 
 mod api;
-use api::{api_handler, hello};
+use api::{api_handler, hello, lua_run};
 
 // Application state
 #[derive(Debug, Clone)]
 pub struct AppState {
     app_name: String,
-}
-
-#[get("/")]
-async fn index() -> Result<fs::NamedFile> {
-    match fs::NamedFile::open("./frontend/dist/index.html") {
-        Ok(file) => Ok(file.set_content_type(mime::TEXT_HTML)),
-        Err(_) => {
-            println!(
-                "Warning: ./frontend/dist/index.html not found. Did you run 'cd frontend && bun run build'?"
-            );
-            Err(actix_web::error::ErrorNotFound(
-                "Vue app not built yet. Run 'cd frontend && bun run build'",
-            ))
-        }
-    }
 }
 
 // Fallback handler for any route not matched by static files
@@ -72,9 +57,10 @@ async fn main() -> io::Result<()> {
             // Register API handlers
             .service(api_handler)
             .service(hello)
+            .service(lua_run)
             // Serve static assets from the Vue app's dist directory
             .service(fs::Files::new("/assets", "./frontend/dist/assets").prefer_utf8(true))
-            .service(fs::Files::new("/", "./frontend/dist").index_file("index.html"))
+            // .service(fs::Files::new("/", "./frontend/dist").index_file("index.html"))
             // Register SPA fallback handler
             .service(spa_fallback)
     })
