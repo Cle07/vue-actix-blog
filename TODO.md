@@ -1,0 +1,2 @@
+- Add backlinks on Article.vue, maybe adding a backlinks field for Article struct.
+- Adding an article on how i created my site.

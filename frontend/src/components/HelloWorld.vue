@@ -29,8 +29,8 @@ onMounted(async () => {
       Welcome to my project built with
       <a href="https://vite.dev/" target="_blank" rel="noopener">Vite</a> +
       <a href="https://vuejs.org/" target="_blank" rel="noopener">Vue 3</a> +
-      <a href="https://actix.rs" class="api-message">{{ apiMessage }}</a>.
-      <br><br>
+      <a href="https://actix.rs" class="api-message">{{ apiMessage }}</a
+      >. <br /><br />
       Use the navigation bar to explore.
     </h3>
   </div>
@@ -52,5 +52,4 @@ h3 {
   font-weight: bold;
   color: #42b883;
 }
-
 </style>

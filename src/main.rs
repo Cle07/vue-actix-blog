@@ -3,7 +3,11 @@ use actix_web::{App, HttpServer, Result, get, middleware, web};
 use std::io;
 
 mod api;
-use api::{api_handler, hello, lua_run};
+mod db;
+mod lua;
+mod test;
+use api::api_handler;
+use lua::lua_run;
 
 // Application state
 #[derive(Debug, Clone)]
@@ -35,7 +39,9 @@ async fn main() -> io::Result<()> {
     println!("  - GET /api - Main API info");
     println!("  - GET /api/actix - Hello world endpoint");
     println!("-----------------------------------------------");
-
+    db::init_db().expect("Failed to initialize database");
+    println!("📦 Database initialized successfully");
+    println!("-----------------------------------------------");
     HttpServer::new(|| {
         App::new()
             .app_data(web::Data::new(AppState {
@@ -56,15 +62,15 @@ async fn main() -> io::Result<()> {
             )
             // Register API handlers
             .service(api_handler)
-            .service(hello)
+            .service(api::get_article)
             .service(lua_run)
             // Serve static assets from the Vue app's dist directory
-            .service(fs::Files::new("/assets", "./frontend/dist/assets").prefer_utf8(true))
+            .service(fs::Files::new("/assets", "./frontend/dist/assets"))
             // .service(fs::Files::new("/", "./frontend/dist").index_file("index.html"))
             // Register SPA fallback handler
             .service(spa_fallback)
     })
-    .bind(("127.0.0.1", 8080))?
+    .bind(("0.0.0.0", 8080))?
     .run()
     .await
 }

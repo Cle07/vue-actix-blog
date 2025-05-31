@@ -15,7 +15,6 @@
       <li>Vue Router for client-side navigation</li>
     </ul>
   </div>
-
 </template>
 
 <style scoped>

@@ -2,19 +2,25 @@
 
 This project demonstrates how to integrate a Vue.js frontend with an Actix Web backend in a single project.
 
+The database of the website is synchronized with the articles/ folder. You can use Markdown to write new articles, and Obsidian-style links.
+
 ## Project Structure
 
 ```
 vue-actix/
 ├── Cargo.toml        # Rust backend dependencies
 ├── src/              # Rust backend source code
+│   ├── api.rs        # Contains the API endpoints
+│   ├── lua.rs        # Contains the API endpoint for Lua compilation
+│   ├── db.rs         # For all interactions with sqlite
+│   ├── test.rs       # Tests (UNCOMPLETE)
 │   └── main.rs       # Actix Web server implementation
 ├── frontend/         # Vue.js frontend
 │   ├── package.json  # Frontend dependencies
 │   ├── index.html    # HTML entry point
 │   ├── src/          # Vue source code
-│   └── ...           # Other Vue project files
-└── dev.sh            # Development workflow script
+│   ├── public/       # For articles images
+│   └── ...           # Rest of Vue project files
 ```
 
 ## Getting Started
@@ -45,6 +51,8 @@ For the best development experience with Vue devtools:
 
 ### Production Mode
 
+You can use the Dockerfile for that, or :
+
 1. Build the Vue frontend:
    ```bash
    cd frontend
@@ -57,17 +65,6 @@ For the best development experience with Vue devtools:
    ```
 
 3. Access your application at [http://localhost:8080](http://localhost:8080)
-
-## API Endpoints
-
-- `GET /api`: Returns a simple JSON response
-- Add more API endpoints in `src/main.rs`
-
-## Notes
-
-- The Vue application is configured to proxy API requests to the Actix backend during development
-- Static files are served from the `frontend/dist` directory in production mode
-- CORS is configured to allow the Vue dev server to communicate with the Actix backend
 
 ## License
 

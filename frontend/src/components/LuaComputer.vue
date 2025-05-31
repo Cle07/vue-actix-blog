@@ -8,13 +8,13 @@ import 'prismjs/components/prism-lua'
 const props = defineProps({
   defaultCode: {
     type: String,
-    default: 'print("Hello, World!")'
-  }
+    default: 'print("Hello, World!")',
+  },
 })
 const code = ref('defaultCode' in props ? props.defaultCode : 'print("Hello, World!")')
 const output = ref('This is a component for the Lua computer.')
+const hasRun = ref(false)
 
-// Function to update the highlighted code
 const updateHighlight = () => {
   const highlighted = Prism.highlight(code.value, Prism.languages.lua, 'lua')
   document.querySelector('#highlighted-code').innerHTML = highlighted
@@ -23,7 +23,7 @@ const updateHighlight = () => {
 onMounted(() => {
   // Initialize content and highlighting
   updateHighlight()
-});
+})
 
 // Re-highlight whenever code changes
 watch(code, () => {
@@ -32,8 +32,10 @@ watch(code, () => {
 
 // Function to run Lua code
 const runCode = async () => {
+  hasRun.value = true
+  output.value = 'Running Lua code...'
   try {
-    console.log('Sending code:', code.value);
+    console.log('Sending code:', code.value)
     const response = await fetch('/api/lua/run', {
       method: 'POST',
       headers: {
@@ -41,27 +43,27 @@ const runCode = async () => {
       },
       body: JSON.stringify({ code: code.value }),
     })
-    
+
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`)
     }
-    
+
     const data = await response.json()
-    console.log('Response data:', data);
-    
+    console.log('Response data:', data)
+
     // Extract content between first parentheses
     const outputText = data.output || 'No output received'
     const match = outputText.match(/\(([^)]*)\)/)
     output.value = match ? match[1] : outputText
   } catch (error) {
-    console.error('Error running Lua code:', error);
+    console.error('Error running Lua code:', error)
     output.value = `Error: ${error.message}`
   }
 }
 
 // Function to reset the code
 const resetCode = () => {
-  code.value = defaultCode
+  code.value = props.defaultCode
   output.value = 'Code has been reset.'
 }
 
@@ -69,7 +71,7 @@ const resetCode = () => {
 onMounted(() => {
   // Initialize content and highlighting
   updateHighlight()
-  
+
   // Add event listeners to buttons
   document.querySelector('#run-button').addEventListener('click', runCode)
   document.querySelector('#reset-button').addEventListener('click', resetCode)
@@ -85,95 +87,105 @@ onMounted(() => {
     </div>
     <div id="code-editor">
       <div class="textarea-wrapper">
-        <textarea 
-          id="code-area" 
-          v-model="code" 
-          @input="updateHighlight" 
+        <textarea
+          id="code-area"
+          v-model="code"
+          @input="updateHighlight"
           spellcheck="false"
         ></textarea>
-        <pre id="highlighting" aria-hidden="true"><code id="highlighted-code" class="language-lua"></code></pre>
+        <pre
+          id="highlighting"
+          aria-hidden="true"
+        ><code id="highlighted-code" class="language-lua"></code></pre>
       </div>
-      <pre id="code-output">{{ output }}</pre>
+      <pre id="code-output" v-show="hasRun">{{ output }}</pre>
     </div>
   </div>
 </template>
-
 <style scoped>
-  #bar {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    flex: 0 0 auto;
-    padding: 10px;
-    background-color: #222;
-    color: #f5f5f5;
-    border-radius: 5px;
-  }
+#bar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  flex: 0 0 auto;
+  padding: 10px;
+  background-color: #111314;
+  color: #f5f5f5;
+  border: 2px solid #f5f5f5;
+  font-size: small;
+}
 
-  button {
-    padding: 5px 10px;
-    background-color: #222;
-    color: #f5f5f5;
-    border-radius: 5px;
-  }
+#reset-button,
+#run-button {
+  padding: 5px 10px;
+  background-color: inherit;
+  color: #f5f5f5;
+  border-radius: 1px;
+  border: 1px solid #f5f5f5;
+}
 
-  #code-container {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-  }
+#code-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
 
-  #code-editor {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-  }
+#code-editor {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
 
-  .textarea-wrapper {
-    position: relative;
-    width: 50%;
-    flex: 1 1 50%;
-    max-width: 50%;
-  }
+.textarea-wrapper {
+  position: relative;
+  width: 100%;
+  flex: 1 1 auto;
+}
 
-  #code-area, #highlighting {
-    margin: 0;
-    padding: 10px;
-    border: 0;
-    width: 100%;
-    height: 300px;
-    font-family: monospace;
-    font-size: 14px;
-    line-height: 1.5;
-    overflow: auto;
-    white-space: pre;
-    box-sizing: border-box;
-  }
+#code-area,
+#highlighting {
+  margin: 0;
+  padding: 10px;
+  border: 0;
+  width: 100%;
+  height: fit-content;
+  font-family: monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  overflow: auto;
+  white-space: pre;
+  box-sizing: border-box;
+}
 
-  #code-area {
-    position: absolute;
-    top: 0;
-    left: 0;
-    color: transparent;
-    background: transparent;
-    caret-color: #f5f5f5;
-    resize: none;
-    z-index: 1;
-  }
-  
-  #highlighting {
-    z-index: 0;
-  }
-  
-  #code-output {
-    margin: 0;
-    padding: 10px;
-    width: 50%;
-    flex: 1 1 50%;
-    max-width: 50%;
-    height: 300px;
-    overflow: auto;
-    background-color: #000000;
-    box-sizing: border-box;
-  }
+#code-area {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: transparent;
+  background: transparent;
+  caret-color: #f5f5f5;
+  resize: none;
+  z-index: 1;
+  height: 100%;
+  min-height: 100%;
+  border: 1px solid #f5f5f5;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+#highlighting {
+  z-index: 0;
+}
+
+#code-output {
+  margin: 0;
+  padding: 10px;
+  width: 100%;
+  height: fit-content;
+  overflow: auto;
+  background-color: #111314;
+  box-sizing: border-box;
+  border: 1px solid #f5f5f5;
+}
 </style>
