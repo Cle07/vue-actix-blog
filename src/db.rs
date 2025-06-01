@@ -7,23 +7,22 @@ pub struct Article {
     pub name: String,
     pub content: String,
     pub links: Vec<String>,
+    pub backlinks: Vec<String>,
 }
 
 impl Article {
     pub fn new(name: String, content: String, available_articles: &[String]) -> Self {
         let raw_links = extract_obsidian_links(&content);
-        println!("Article '{}' - Raw links extracted: {:?}", name, raw_links);
-        println!("Available articles: {:?}", available_articles);
         let links = raw_links
             .into_iter()
             .filter(|link| available_articles.contains(link))
             .collect();
-        println!("Article '{}' - Filtered links: {:?}", name, links);
         Self {
             id: None,
             name,
             content,
             links,
+            backlinks: Vec::new(),
         }
     }
 
@@ -31,18 +30,14 @@ impl Article {
         // Open the database connection
         let connection = sqlite::open("articles.db")
             .expect("Database should already has been created at that point.");
-
         let mut article = None;
 
         // Prepare the query with proper parameter binding
         let mut statement = connection
-            .prepare("SELECT id, name, content, links FROM articles WHERE name = ?")
+            .prepare("SELECT id, name, content, links, backlinks FROM articles WHERE name = ?")
             .expect("Failed to prepare statement");
-
-        // Bind the name parameter
         statement.bind((1, name)).expect("Failed to bind parameter");
 
-        // Execute the query
         if statement.next().expect("Failed to execute query") == sqlite::State::Row {
             // Extract data from the row
             let id = statement.read::<i64, _>(0).ok();
@@ -58,12 +53,22 @@ impl Article {
             let links =
                 serde_json::from_str::<Vec<String>>(&links_json).unwrap_or_else(|_| Vec::new());
 
+            // Parse the backlinks JSON
+            let backlinks_json = statement
+                .read::<String, _>(4)
+                .expect("Failed to read backlinks");
+            let backlinks =
+                serde_json::from_str::<Vec<String>>(&backlinks_json).unwrap_or_else(|_| Vec::new());
+
             article = Some(Self {
                 id,
                 name: article_name,
                 content,
                 links,
+                backlinks,
             });
+        } else {
+            log::info!("Request for an unknown Article : '{}'", name);
         }
 
         article
@@ -88,12 +93,15 @@ pub fn extract_obsidian_links(content: &str) -> Vec<String> {
 }
 
 pub fn init_db() -> sqlite::Result<()> {
-    println!("Initializing database at articles.db...");
-    let connection = sqlite::open("articles.db")?;
+    termimad::print_inline(
+        "
+Connecting to articles database...
+",
+    );
+    let connection = sqlite::open("articles.db").expect("Failed to open database");
 
-    println!("Database connection established");
+    // Not yet implementing incremental updates, so full clean.
     connection.execute("DROP TABLE IF EXISTS articles;")?;
-    println!("Cleaned up existing tables");
 
     connection.execute(
         "
@@ -101,13 +109,14 @@ pub fn init_db() -> sqlite::Result<()> {
             id INTEGER PRIMARY KEY,
             name TEXT NOT NULL UNIQUE,
             content TEXT NOT NULL,
-            links TEXT
+            links TEXT,
+            backlinks TEXT
         );
         ",
     )?;
-    println!("Table schema created/verified");
 
-    let articles_path = std::path::Path::new("articles");
+    let articles_path = std::path::Path::new("./articles/");
+
     if articles_path.exists() && articles_path.is_dir() {
         // First pass: collect all article names
         let mut article_names = Vec::new();
@@ -123,14 +132,13 @@ pub fn init_db() -> sqlite::Result<()> {
                     .unwrap_or(false)
                 {
                     if let Some(file_name) = entry.path().file_stem().and_then(|s| s.to_str()) {
-                        let file_path = format!("articles/{}.md", file_name);
+                        let file_path = format!("./articles/{}.md", file_name);
                         match std::fs::read_to_string(&file_path) {
                             Ok(raw_content) => {
-                                println!("Found article: {}", file_name);
                                 article_names.push(file_name.to_string());
                                 articles_data.push((file_name.to_string(), raw_content));
                             }
-                            Err(e) => println!("Error reading file {}: {}", file_path, e),
+                            Err(e) => eprintln!("Error reading file {}: {}", file_path, e),
                         }
                     }
                 }
@@ -138,45 +146,73 @@ pub fn init_db() -> sqlite::Result<()> {
         }
 
         // Second pass: create articles with resolved links
+        let mut articles: Vec<Article> = Vec::new();
         for (name, content) in articles_data {
             let article = Article::new(name.clone(), content, &article_names);
+            articles.push(article);
+        }
+
+        // Third pass: compute backlinks
+        for i in 0..articles.len() {
+            let article_name = articles[i].name.clone();
+            let mut backlinks = Vec::new();
+            for (j, article) in articles.iter().enumerate() {
+                if i != j && article.links.contains(&article_name) {
+                    backlinks.push(article.name.clone());
+                }
+            }
+            articles[i].backlinks = backlinks;
+        }
+
+        // Fourth pass: insert into database
+        for article in articles {
             let links_json = serde_json::to_string(&article.links).unwrap_or_default();
+            let backlinks_json = serde_json::to_string(&article.backlinks).unwrap_or_default();
 
             // Check if article already exists and delete it if it does
-            let delete_query = format!("DELETE FROM articles WHERE name = '{}'", name);
+            let delete_query = format!("DELETE FROM articles WHERE name = '{}'", article.name);
             if let Err(e) = connection.execute(&delete_query) {
-                eprintln!("Failed to delete existing article '{}': {}", name, e);
+                eprintln!(
+                    "Failed to delete existing article '{}': {}",
+                    article.name, e
+                );
             }
 
-            println!("Inserting article: {}", name);
-            let mut statement = connection
-                .prepare("INSERT INTO articles (name, content, links) VALUES (?, ?, ?)")?;
+            let mut statement = connection.prepare(
+                "INSERT INTO articles (name, content, links, backlinks) VALUES (?, ?, ?, ?)",
+            )?;
             if let Err(e) = statement
                 .bind((1, article.name.as_str()))
                 .and_then(|_| statement.bind((2, article.content.as_str())))
                 .and_then(|_| statement.bind((3, links_json.as_str())))
+                .and_then(|_| statement.bind((4, backlinks_json.as_str())))
                 .and_then(|_| statement.next())
             {
                 eprintln!("Failed to insert article '{}': {}", article.name, e);
-            } else {
-                println!("Article '{}' inserted successfully", name);
             }
         }
+    } else {
+        termimad::print_inline(
+            "
+**ERROR: You must first create a /articles directory in the root folder.**
+Exiting...
+",
+        );
+        std::process::exit(1);
     }
-
-    // Print all articles in the table for debugging
-    println!("=== All Articles in Database ===");
 
     // Check if there are any articles in the database
     let count_query = "SELECT COUNT(*) as count FROM articles";
     let mut has_articles = false;
-
-    println!("Counting articles in database...");
     match connection.iterate(count_query, |pairs| {
         if let Some((_, Some(count_str))) = pairs.first() {
             if let Ok(count) = count_str.parse::<i64>() {
                 has_articles = count > 0;
-                println!("Found {} articles in the database", count);
+                termimad::mad_print_inline!(
+                    termimad::get_default_skin(),
+                    "Found **$0** articles.",
+                    count
+                );
             }
         }
         true
@@ -186,9 +222,8 @@ pub fn init_db() -> sqlite::Result<()> {
     };
 
     if has_articles {
-        let query = "SELECT id, name, links FROM articles";
-        println!("Listing all articles:");
-        match connection.iterate(query, |pairs| {
+        /*  let query = "SELECT id, name, links FROM articles";
+            match connection.iterate(query, |pairs| {
             for &(column, value) in pairs.iter() {
                 print!("{}: {:?}, ", column, value.unwrap_or("NULL"));
             }
@@ -197,14 +232,14 @@ pub fn init_db() -> sqlite::Result<()> {
         }) {
             Ok(_) => {}
             Err(e) => println!("Error listing articles: {}", e),
-        };
+        }; */
     } else {
-        println!(
-            "No articles found. Check that the '/articles' directory exists and contains markdown files."
-        );
+        termimad::print_inline(
+            "
+**ERROR: Your /articles folder does not contain any files, or a problem of reading has happened.**
+Exiting...
+",
+        )
     }
-
-    println!("=== End of Articles ===");
-
     Ok(())
 }

@@ -11,7 +11,7 @@ const routes = [
     path: '/about',
     name: 'About',
     component: () => import('./views/Article.vue'),
-    props: { article_name: 'about.md' },
+    props: { article_name: 'this site.md' },
   },
   {
     path: '/article/:article_name',

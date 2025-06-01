@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 
+const timer = ref(null)
 const time = ref(
   new Date().toLocaleTimeString('en-US', {
     hour12: false,
@@ -10,7 +11,6 @@ const time = ref(
     fractionalSecondDigits: 3,
   }),
 )
-const timer = ref(null)
 
 onMounted(() => {
   // Update time every 100ms (0.1 seconds)
@@ -57,33 +57,16 @@ onBeforeUnmount(() => {
         <div id="#time-cell" class="grid-item">
           <p>{{ time }}</p>
         </div>
-        <div id="#twitter-cell" class="grid-item">
-          <p>
-            <a href="https://x.com/bergsonienne" target="_blank" rel="noopener noreferrer">
-              <img
-                src="@/assets/twitter_pixel.svg"
-                alt="Twitter"
-                height="24"
-                width="24"
-                style="
-                  filter: brightness(0) saturate(100%) invert(48%) sepia(90%) saturate(2299%)
-                    hue-rotate(194deg) brightness(101%) contrast(101%);
-                "
-              />
-            </a>
-          </p>
-        </div>
       </div>
       <div class="inner-container">
         <div class="grid-item">
           <p><router-link to="/about">About</router-link></p>
         </div>
         <div class="grid-item">
-          <p><router-link to="/timeline">Timeline</router-link></p>
+          <p><router-link to="/lua">Lua Experiments</router-link></p>
         </div>
-
         <div class="grid-item">
-          <p><router-link to="/lua">Lua Stuff</router-link></p>
+          <p><router-link to="/timeline">IN CONSTRUCTION</router-link></p>
         </div>
       </div>
     </div>
@@ -153,7 +136,7 @@ p {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Departure Mono', monospace;
+  font-family: 'JetBrains Mono', monospace;
   font-size: 0.95rem;
   background-color: #111314;
 }

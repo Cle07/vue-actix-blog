@@ -18,11 +18,11 @@ const error = ref(null)
 const parsedContent = computed(() => {
   if (!article.value?.content) return ''
 
-  // First convert markdown to HTML
-  const htmlContent = marked.parse(article.value.content)
+  // FIRST process Obsidian-specific syntax on the raw markdown
+  const obsidianProcessed = parseObsidianLinks(article.value.content)
 
-  // Then process Obsidian-specific syntax
-  return parseObsidianLinks(htmlContent)
+  // THEN convert markdown to HTML
+  return marked.parse(obsidianProcessed)
 })
 
 onMounted(async () => {
@@ -58,6 +58,15 @@ onMounted(async () => {
     </div>
     <div v-else-if="article" class="content">
       <div class="markdown-content" v-html="parsedContent"></div>
+
+      <div v-if="article.backlinks && article.backlinks.length > 0" class="backlinks-section">
+        <h2>Backlinks:</h2>
+        <ul class="backlinks">
+          <li v-for="backlink in article.backlinks" :key="backlink">
+            <a href="#" :data-link="backlink" class="obsidian-link custom-link">{{ backlink }}</a>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -65,7 +74,7 @@ onMounted(async () => {
 <style scoped>
 .article {
   padding: 1.5rem;
-  font-family: 'Departure Mono', monospace;
+  font-family: 'JetBrains Mono', monospace;
 }
 
 .loading,
@@ -98,8 +107,15 @@ h2 {
 }
 
 .markdown-content {
+  display: flex;
+  flex-direction: column;
   margin-bottom: 2rem;
   line-height: 1.6;
+  gap: 0px;
+}
+
+.markdown-content :deep(a) {
+  color: #5ce2fa;
 }
 
 .markdown-content :deep(.obsidian-image) {
@@ -107,25 +123,38 @@ h2 {
   height: auto;
   margin: 1rem 0;
   border-radius: 4px;
+  align-self: center;
 }
 
 .markdown-content :deep(.obsidian-link) {
-  color: #42b883;
-  text-decoration: underline;
+  color: #6dd4a3;
+  background-color: rgba(109, 212, 163, 0.3);
+  text-decoration: none;
   cursor: pointer;
-  background: none;
   border: none;
-  padding: 0;
+  padding: 0.5px 2px;
+  border-radius: 4px;
   font: inherit;
 }
 
+.markdown-content :deep(.obsidian-link:hover) {
+  color: #8de4b8;
+  background-color: rgba(141, 228, 184, 0.4);
+}
+
 .markdown-content :deep(.footnotes) {
-  margin-top: 2rem;
+  margin-top: 0px;
   padding-top: 1rem;
   border-top: 1px solid #333;
   font-size: 0.9rem;
   word-wrap: break-word;
   overflow-wrap: break-word;
+}
+
+.markdown-content :deep(iframe) {
+  margin: 1rem 0px;
+  align-self: center;
+  border: 2px solid #333;
 }
 
 .links-section {
@@ -152,6 +181,33 @@ ul.links a {
 }
 
 ul.links a:hover {
+  text-decoration: underline;
+}
+
+.backlinks-section {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 2px solid #333;
+}
+
+ul.backlinks {
+  margin-left: 1.5rem;
+  margin-bottom: 1rem;
+  border-left: 4px solid #666;
+  padding-left: 1rem;
+}
+
+ul.backlinks li {
+  margin-bottom: 0.5rem;
+  list-style-type: square;
+}
+
+ul.backlinks a {
+  color: #6dd4a3;
+  text-decoration: none;
+}
+
+ul.backlinks a:hover {
   text-decoration: underline;
 }
 </style>

@@ -13,10 +13,11 @@ import NavBar from './components/NavBar.vue'
 
 <style>
 @font-face {
-  font-family: 'Departure Mono';
+  font-family: 'JetBrains Mono', 'Departure Mono', sans-serif;
   src:
     url('@/assets/fonts/DepartureMono-Regular.woff2') format('woff2'),
-    url('@/assets/fonts/DepartureMono-Regular.woff') format('woff');
+    url('@/assets/fonts/DepartureMono-Regular.woff') format('woff'),
+    url('@/assets/fonts/JetBrainsMono-Regular.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
 }

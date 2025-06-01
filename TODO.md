@@ -1,2 +1,1 @@
-- Add backlinks on Article.vue, maybe adding a backlinks field for Article struct.
-- Adding an article on how i created my site.
+- Creating a Lua Notebook view, for that, use LuaCodeBlock.vue + save the state of the code incrementally as the user run cells, with obsidian markdown rendering in between cells.

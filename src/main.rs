@@ -1,19 +1,19 @@
 use actix_files as fs;
-use actix_web::{App, HttpServer, Result, get, middleware, web};
+use actix_web::{App, HttpServer, Result, get, middleware};
 use std::io;
 
 mod api;
 mod db;
 mod lua;
 mod test;
-use api::api_handler;
-use lua::lua_run;
 
-// Application state
+// Application state (not used yet)
+/*
 #[derive(Debug, Clone)]
 pub struct AppState {
     app_name: String,
 }
+*/
 
 // Fallback handler for any route not matched by static files
 #[get("{path:.*}")]
@@ -28,25 +28,39 @@ async fn spa_fallback() -> Result<fs::NamedFile> {
 
 #[actix_web::main]
 async fn main() -> io::Result<()> {
-    println!("🚀 Starting server at http://localhost:8080");
-    println!("-----------------------------------------------");
-    println!("🔧 To use Vue devtools during development:");
-    println!("  1. Keep this server running");
-    println!("  2. Open a new terminal and run: cd frontend && bun run dev");
-    println!("  3. Access your app at: http://localhost:5173");
-    println!("-----------------------------------------------");
-    println!("📡 API Endpoints:");
-    println!("  - GET /api - Main API info");
-    println!("  - GET /api/actix - Hello world endpoint");
-    println!("-----------------------------------------------");
+    termimad::print_inline(
+        "
+
+
+        ▗▖ ▗▖▗▞▀▚▖▗▖   █ ▗▞▀▜▌▗▖
+        ▐▌ ▐▌▐▛▀▀▘▐▌   █ ▝▚▄▟▌▐▌
+        ▐▌ ▐▌▝▚▄▄▖▐▛▀▚▖█      ▐▛▀▚▖
+        ▐▙█▟▌     ▐▙▄▞▘█      ▐▙▄▞▘
+
+        **Now initializing server...**
+==============================================",
+    );
+
     db::init_db().expect("Failed to initialize database");
-    println!("📦 Database initialized successfully");
-    println!("-----------------------------------------------");
+
+    termimad::print_inline(
+        "
+The server is now running at **http://localhost:8080**
+==============================================
+*To use Vue devtools during development:
+1. Keep this server running
+2. Open a new terminal and run: `cd frontend && bun run dev`
+3. Access your app at: **http://localhost:5173***
+==============================================
+
+",
+    );
+    env_logger::init_from_env(env_logger::Env::default().default_filter_or("info"));
     HttpServer::new(|| {
         App::new()
-            .app_data(web::Data::new(AppState {
+            /*            .app_data(web::Data::new(AppState {
                 app_name: String::from("Actix Web"),
-            }))
+            })) */
             // Enable CORS for Vue dev server
             .wrap(
                 middleware::DefaultHeaders::new()
@@ -60,10 +74,11 @@ async fn main() -> io::Result<()> {
                         "Content-Type, Authorization",
                     )),
             )
+            .wrap(middleware::Logger::default())
             // Register API handlers
-            .service(api_handler)
+            .service(api::api_handler)
             .service(api::get_article)
-            .service(lua_run)
+            .service(lua::lua_run)
             // Serve static assets from the Vue app's dist directory
             .service(fs::Files::new("/assets", "./frontend/dist/assets"))
             // .service(fs::Files::new("/", "./frontend/dist").index_file("index.html"))

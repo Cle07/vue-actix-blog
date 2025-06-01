@@ -1,6 +1,9 @@
 use actix_web::{HttpResponse, Result, post, web};
+use mlua::prelude::*;
 use serde::Deserialize;
 use serde_json::json;
+use std::sync::{Arc, Mutex};
+use tokio::time::{Duration, timeout};
 
 #[derive(Deserialize)]
 pub struct LuaRequest {
@@ -10,10 +13,7 @@ pub struct LuaRequest {
 // Lua code execution endpoint
 #[post("/api/lua/run")]
 pub async fn lua_run(lua_req: web::Json<LuaRequest>) -> Result<HttpResponse> {
-    use mlua::prelude::*;
-    use std::sync::{Arc, Mutex};
-    use tokio::time::{Duration, timeout};
-
+    // Clone the code and move it in a tokio task
     let lua_code = lua_req.code.clone();
     let lua_task = tokio::task::spawn_blocking(move || -> Result<String, String> {
         let lua = Lua::new();
@@ -66,9 +66,15 @@ pub async fn lua_run(lua_req: web::Json<LuaRequest>) -> Result<HttpResponse> {
         Ok(Ok(Err(lua_error))) => Ok(HttpResponse::BadRequest().json(json!({
             "error": lua_error,
         }))),
-        Ok(Err(_)) => Ok(HttpResponse::InternalServerError().json(json!({
-            "error": "Task execution failed",
-        }))),
+        Ok(Err(e)) => {
+            log::info!(
+                "An internal server error has occured during Lua interpreting:\n{}",
+                e
+            );
+            Ok(HttpResponse::InternalServerError().json(json!({
+                "error": "Task execution failed",
+            })))
+        }
         Err(_) => Ok(HttpResponse::RequestTimeout().json(json!({
             "error": "Code execution timed out after 5 seconds",
         }))),

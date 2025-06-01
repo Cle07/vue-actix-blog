@@ -4,13 +4,13 @@ import Prism from 'prismjs'
 import '@/assets/prism.css'
 import 'prismjs/components/prism-lua'
 
-// Default code for reset function
 const props = defineProps({
   defaultCode: {
     type: String,
     default: 'print("Hello, World!")',
   },
 })
+
 const code = ref('defaultCode' in props ? props.defaultCode : 'print("Hello, World!")')
 const output = ref('This is a component for the Lua computer.')
 const hasRun = ref(false)
@@ -20,17 +20,11 @@ const updateHighlight = () => {
   document.querySelector('#highlighted-code').innerHTML = highlighted
 }
 
-onMounted(() => {
-  // Initialize content and highlighting
-  updateHighlight()
-})
+const resetCode = () => {
+  code.value = props.defaultCode
+  output.value = 'Code has been reset.'
+}
 
-// Re-highlight whenever code changes
-watch(code, () => {
-  updateHighlight()
-})
-
-// Function to run Lua code
 const runCode = async () => {
   hasRun.value = true
   output.value = 'Running Lua code...'
@@ -61,23 +55,18 @@ const runCode = async () => {
   }
 }
 
-// Function to reset the code
-const resetCode = () => {
-  code.value = props.defaultCode
-  output.value = 'Code has been reset.'
-}
-
-// Add event listeners when mounted
 onMounted(() => {
   // Initialize content and highlighting
   updateHighlight()
-
   // Add event listeners to buttons
   document.querySelector('#run-button').addEventListener('click', runCode)
   document.querySelector('#reset-button').addEventListener('click', resetCode)
 })
-</script>
 
+watch(code, () => {
+  updateHighlight()
+})
+</script>
 <template>
   <div id="code-container">
     <div id="bar">
@@ -123,6 +112,11 @@ onMounted(() => {
   color: #f5f5f5;
   border-radius: 1px;
   border: 1px solid #f5f5f5;
+  font-family: inherit;
+}
+
+#reset-button:hover {
+  background-color: white;
 }
 
 #code-container {
@@ -150,8 +144,8 @@ onMounted(() => {
   border: 0;
   width: 100%;
   height: fit-content;
-  font-family: monospace;
-  font-size: 14px;
+  font-family: 'Departure Mono', monospace;
+  font-size: 15px;
   line-height: 1.5;
   overflow: auto;
   white-space: pre;
@@ -187,5 +181,7 @@ onMounted(() => {
   background-color: #111314;
   box-sizing: border-box;
   border: 1px solid #f5f5f5;
+  font-family: 'Departure Mono';
+  font-size: 15px;
 }
 </style>

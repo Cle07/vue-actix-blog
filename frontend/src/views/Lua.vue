@@ -1,13 +1,12 @@
 <script setup>
-// About page component
-import LuaComputer from '../components/LuaComputer.vue'
+import LuaCodeBlock from '../components/LuaCodeBlock.vue'
 </script>
 
 <template>
   <div class="about">
-    <h1>Lua Code Compiler</h1>
+    <h1>Lua Playground</h1>
     <p>Here you can run Lua code through the Rust backend of the website.</p>
-    <LuaComputer
+    <LuaCodeBlock
       :defaultCode="
         String.raw`-- This Lua editor runs on luau for safety.
 
@@ -21,7 +20,7 @@ print(to_print[1]..&quot;, &quot;..to_print[2]..&quot;!&quot;)`
 <style scoped>
 .about {
   padding: 1.5rem;
-  font-family: 'Departure Mono', monospace;
+  font-family: 'JetBrains Mono', monospace;
 }
 
 h1 {

@@ -1,3 +1,5 @@
 /target
 fly.toml
 Cargo.lock
+/articles/*.md
+articles.db
