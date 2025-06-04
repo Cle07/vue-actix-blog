@@ -37,7 +37,7 @@ async fn main() -> io::Result<()> {
         ▐▌ ▐▌▝▚▄▄▖▐▛▀▚▖█      ▐▛▀▚▖
         ▐▙█▟▌     ▐▙▄▞▘█      ▐▙▄▞▘
 
-        **Now initializing server...**
+        **Initializing server...**
 ==============================================",
     );
 
@@ -81,6 +81,14 @@ The server is now running at **http://localhost:8080**
             .service(lua::lua_run)
             // Serve static assets from the Vue app's dist directory
             .service(fs::Files::new("/assets", "./frontend/dist/assets"))
+            // Serve favicon.ico from the root
+            .service(
+                fs::Files::new("/favicon.ico", "./frontend/dist")
+                    .show_files_listing()
+                    .index_file("favicon.ico"),
+            )
+            // Serve other static files from frontend/dist
+            .service(fs::Files::new("/static", "./frontend/dist"))
             // .service(fs::Files::new("/", "./frontend/dist").index_file("index.html"))
             // Register SPA fallback handler
             .service(spa_fallback)

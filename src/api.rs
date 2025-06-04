@@ -23,8 +23,12 @@ pub async fn get_article(path: web::Path<String>) -> Result<HttpResponse> {
         .decode_utf8()
         .unwrap_or_else(|_| encoded_name.into())
         .to_string();
-    // Remove extension if present, but don't fail if no extension exists
-    let article_name = decoded.split('.').next().unwrap_or(&decoded).to_string();
+    // Keep the full filename for .lua.md files, otherwise remove extension
+    let article_name = if decoded.ends_with(".lua.md") {
+        decoded
+    } else {
+        decoded.split('.').next().unwrap_or(&decoded).to_string()
+    };
     // Use the get_from_name method to retrieve the article
     match db::Article::get_from_name(&article_name) {
         Some(article) => Ok(HttpResponse::Ok().json(article)),

@@ -1,12 +1,12 @@
 <script setup>
-import LuaCodeBlock from '../components/LuaCodeBlock.vue'
+import LuaPlayground from '../components/LuaPlayground.vue'
 </script>
 
 <template>
   <div class="about">
     <h1>Lua Playground</h1>
     <p>Here you can run Lua code through the Rust backend of the website.</p>
-    <LuaCodeBlock
+    <LuaPlayground
       :defaultCode="
         String.raw`-- This Lua editor runs on luau for safety.
 

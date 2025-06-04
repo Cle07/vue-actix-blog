@@ -131,12 +131,24 @@ Connecting to articles database...
                     .map(|ext| ext == "md")
                     .unwrap_or(false)
                 {
-                    if let Some(file_name) = entry.path().file_stem().and_then(|s| s.to_str()) {
-                        let file_path = format!("./articles/{}.md", file_name);
+                    if let Some(full_file_name) = entry.path().file_name().and_then(|s| s.to_str())
+                    {
+                        let file_path = format!("./articles/{}", full_file_name);
                         match std::fs::read_to_string(&file_path) {
                             Ok(raw_content) => {
-                                article_names.push(file_name.to_string());
-                                articles_data.push((file_name.to_string(), raw_content));
+                                // For .lua.md files, keep the full name, otherwise use stem
+                                let article_name = if full_file_name.ends_with(".lua.md") {
+                                    full_file_name.to_string()
+                                } else {
+                                    entry
+                                        .path()
+                                        .file_stem()
+                                        .and_then(|s| s.to_str())
+                                        .unwrap_or(full_file_name)
+                                        .to_string()
+                                };
+                                article_names.push(article_name.clone());
+                                articles_data.push((article_name, raw_content));
                             }
                             Err(e) => eprintln!("Error reading file {}: {}", file_path, e),
                         }

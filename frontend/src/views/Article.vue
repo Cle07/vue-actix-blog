@@ -41,8 +41,12 @@ onMounted(async () => {
   document.addEventListener('click', (e) => {
     if (e.target.classList.contains('custom-link')) {
       e.preventDefault()
+      const route = e.target.getAttribute('data-route')
       const link = e.target.getAttribute('data-link')
-      if (link) {
+      if (route) {
+        router.push(route)
+      } else if (link) {
+        // Fallback for backward compatibility
         router.push(`/article/${link}`)
       }
     }
@@ -63,7 +67,13 @@ onMounted(async () => {
         <h2>Backlinks:</h2>
         <ul class="backlinks">
           <li v-for="backlink in article.backlinks" :key="backlink">
-            <a href="#" :data-link="backlink" class="obsidian-link custom-link">{{ backlink }}</a>
+            <a
+              href="#"
+              :data-link="backlink"
+              :data-route="`/article/${backlink}`"
+              class="obsidian-link custom-link"
+              >{{ backlink }}</a
+            >
           </li>
         </ul>
       </div>
@@ -86,7 +96,7 @@ onMounted(async () => {
 
 .error {
   color: #ff6b6b;
-  border: 1px solid #ff6b6b;
+  border: 2px solid #ff6b6b;
   border-radius: 4px;
   padding: 1rem;
 }

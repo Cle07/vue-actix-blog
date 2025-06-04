@@ -16,19 +16,15 @@ const routes = [
   {
     path: '/article/:article_name',
     name: 'Article',
-    component: () => import('./views/Article.vue'),
+    component: () => import('./views/ArticleWrapper.vue'),
     props: (route) => ({ article_name: route.params.article_name }),
   },
   {
-    path: '/lua',
+    path: '/lua_playground',
     name: 'LuaEditor',
     component: () => import('./views/Lua.vue'),
   },
-  {
-    path: '/timeline',
-    name: 'Timeline',
-    component: () => import('./views/Timeline.vue'),
-  },
+
   {
     path: '/:pathMatch(.*)*',
     name: 'ServerHandled',

@@ -51,7 +51,9 @@ onBeforeUnmount(() => {
         </div>
         <div id="#route-cell" class="grid-item">
           <p style="white-space: nowrap">
-            <router-link to="/">{{ decodeURI($route.path) }}</router-link>
+            <router-link to="/">{{
+              decodeURI($route.path).split('.').slice(0, -1).join('.') || decodeURI($route.path)
+            }}</router-link>
           </p>
         </div>
         <div id="#time-cell" class="grid-item">
@@ -63,10 +65,10 @@ onBeforeUnmount(() => {
           <p><router-link to="/about">About</router-link></p>
         </div>
         <div class="grid-item">
-          <p><router-link to="/lua">Lua Experiments</router-link></p>
+          <p><router-link to="/lua_playground">Lua Playground</router-link></p>
         </div>
         <div class="grid-item">
-          <p><router-link to="/timeline">IN CONSTRUCTION</router-link></p>
+          <p><router-link to="/article/demo.lua.md">IN CONSTRUCTION</router-link></p>
         </div>
       </div>
     </div>

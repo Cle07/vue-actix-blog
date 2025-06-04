@@ -28,10 +28,14 @@ export function parseObsidianLinks(content, options = { useRouterLinks: true }) 
   // or [[Page|Custom text]] -> <router-link to="/article/Page">Custom text</router-link>
   processedContent = processedContent.replace(/\[\[(.*?)(?:\|(.*?))?\]\]/g, (_, link, alias) => {
     const displayText = alias ? alias.trim() : link.trim()
-    const encodedLink = encodeURIComponent(link.trim())
+    const trimmedLink = link.trim()
+    const encodedLink = encodeURIComponent(trimmedLink)
+
+    // Use /article/ for all links (both .md and .lua.md)
+    const routePath = `/article/${encodedLink}`
 
     if (options.useRouterLinks) {
-      return `<a href="#" data-link="${encodedLink}" class="obsidian-link custom-link">${displayText}</a>`
+      return `<a href="#" data-link="${encodedLink}" data-route="${routePath}" class="obsidian-link custom-link">${displayText}</a>`
     }
   })
 
