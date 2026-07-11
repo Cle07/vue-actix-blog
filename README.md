@@ -25,6 +25,8 @@ vue-actix/
 
 ## Getting Started
 
+In articles/ create a home.md then create your blog like a simple Obsidian.
+
 ### Prerequisites
 
 - [Rust](https://www.rust-lang.org/tools/install)
