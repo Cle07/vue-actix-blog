@@ -62,13 +62,13 @@ onBeforeUnmount(() => {
       </div>
       <div class="inner-container">
         <div class="grid-item">
-          <p><router-link to="/about">About</router-link></p>
+          <p><router-link to="/about">About this site</router-link></p>
         </div>
         <div class="grid-item">
           <p><router-link to="/lua_playground">Lua Playground</router-link></p>
         </div>
         <div class="grid-item">
-          <p><router-link to="/article/demo.lua.md">IN CONSTRUCTION</router-link></p>
+          <p><router-link to="/">IN CONSTRUCTION</router-link></p>
         </div>
       </div>
     </div>

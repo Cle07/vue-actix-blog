@@ -90,6 +90,7 @@ The server is now running at **http://localhost:8080**
             // Serve other static files from frontend/dist
             .service(fs::Files::new("/static", "./frontend/dist"))
             // .service(fs::Files::new("/", "./frontend/dist").index_file("index.html"))
+            .service(fs::Files::new("/images", "./frontend/dist/images"))
             // Register SPA fallback handler
             .service(spa_fallback)
     })

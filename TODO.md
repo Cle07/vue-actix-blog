@@ -1,1 +1,2 @@
-- Creating a Lua Notebook view, for that, use LuaCodeBlock.vue + save the state of the code incrementally as the user run cells, with obsidian markdown rendering in between cells.
+[x] Creating a Lua Notebook view, for that, use LuaCodeBlock.vue + save the state of the code incrementally as the user run cells, with obsidian markdown rendering in between cells.
+[ ] 

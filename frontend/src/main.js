@@ -18,7 +18,7 @@ export function parseObsidianLinks(content, options = { useRouterLinks: true }) 
   let processedContent = content
   const footnotes = []
 
-  // Process Obsidian image links: ![[image.jpg]] -> <img src="/assets/images/image.jpg" alt="image.jpg" class="obsidian-image">
+  // Process Obsidian image links: ![[image.jpg]] -> <img src="/images/image.jpg" alt="image.jpg" class="obsidian-image">
   processedContent = processedContent.replace(/!\[\[(.*?)\]\]/g, (_, imagePath) => {
     const path = imagePath.trim()
     return `<img src="/images/${path}" alt="${path}" class="obsidian-image">`
