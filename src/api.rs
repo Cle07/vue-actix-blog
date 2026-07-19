@@ -24,7 +24,7 @@ pub async fn get_article(path: web::Path<String>) -> Result<HttpResponse> {
         .unwrap_or_else(|_| encoded_name.into())
         .to_string();
     // Keep the full filename for .lua.md files, otherwise remove extension
-    let article_name = if decoded.ends_with(".lua.md") {
+    let article_name = if decoded.ends_with(".lua.md") || decoded.ends_with(".timeline.md") {
         decoded
     } else {
         decoded.split('.').next().unwrap_or(&decoded).to_string()
