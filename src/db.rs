@@ -137,7 +137,9 @@ Connecting to articles database...
                         match std::fs::read_to_string(&file_path) {
                             Ok(raw_content) => {
                                 // For .lua.md files, keep the full name, otherwise use stem
-                                let article_name = if full_file_name.ends_with(".lua.md") {
+                                let article_name = if full_file_name.ends_with(".lua.md")
+                                    || full_file_name.ends_with("timeline.md")
+                                {
                                     full_file_name.to_string()
                                 } else {
                                     entry
