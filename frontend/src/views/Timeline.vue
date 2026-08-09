@@ -28,12 +28,17 @@ const timelineEntries = computed(() => {
 
   for (const line of raw.split('\n')) {
     if (line.startsWith('# ')) {
+<<<<<<< HEAD
+=======
+      // Sauvegarder l'entrée précédente
+>>>>>>> 8d930176792abe0f1fd84793f44e61cee68c4626
       if (currentDate !== null) {
         entries.push({
           date: currentDate,
           content: currentContent.trim(),
         })
       }
+<<<<<<< HEAD
 
       currentDate = line.slice(2).trim()
       currentContent = ''
@@ -42,6 +47,16 @@ const timelineEntries = computed(() => {
     }
   }
 
+=======
+      currentDate = line.slice(2).trim()
+      currentContent = ''
+    } else if (currentDate !== null) {
+      currentContent += line + '\n'
+    }
+  }
+
+  // Dernière entrée
+>>>>>>> 8d930176792abe0f1fd84793f44e61cee68c4626
   if (currentDate !== null) {
     entries.push({
       date: currentDate,
@@ -49,6 +64,7 @@ const timelineEntries = computed(() => {
     })
   }
 
+<<<<<<< HEAD
   const parseDate = (dateString) => {
     const [day, month, year] = dateString.split('/').map(Number)
 
@@ -68,6 +84,16 @@ const timelineEntries = computed(() => {
       : difference
   })
 })
+=======
+  // Tri par date
+  return [...entries].sort((a, b) => {
+    return sortOrder.value === 'desc'
+      ? b.date.localeCompare(a.date)
+      : a.date.localeCompare(b.date)
+  })
+})
+
+>>>>>>> 8d930176792abe0f1fd84793f44e61cee68c4626
 // Parser le markdown de chaque entrée individuellement
 function parseEntryContent(content) {
   const obsidianProcessed = parseObsidianLinks(content)

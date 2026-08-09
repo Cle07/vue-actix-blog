@@ -1,3 +1,5 @@
+```text
 [x] Creating a Lua Notebook view, for that, use LuaCodeBlock.vue + save the state of the code incrementally as the user run cells, with obsidian markdown rendering in between cells.
 [ ] Dans les markdown, ajouter un flag #DATE-BANNER, quand il est dans un fichier, ça active un widget qui permet le tri par date, et le fichier doit etre tout le temps au format "# date\ncontenu#date\n...".
 [ ] Rajouter le parsing et l'affichage de formules Latex
+```
