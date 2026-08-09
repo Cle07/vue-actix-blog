@@ -25,7 +25,7 @@ vue-actix/
 
 ## Getting Started
 
-In articles/ create a home.md then create your blog like a simple Obsidian.
+In articles/ create a home.md and about.md then create your blog like a simple Obsidian.
 
 ### Prerequisites
 
