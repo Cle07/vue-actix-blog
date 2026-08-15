@@ -220,4 +220,21 @@ ul.backlinks a {
 ul.backlinks a:hover {
   text-decoration: underline;
 }
+
+/* ============================================================
+ * FIX: wrapping du texte dans les blocs de code et les URLs
+ * (override de Prism qui force white-space: pre / word-wrap: normal)
+ * ============================================================ */
+.markdown-content :deep(pre),
+.markdown-content :deep(pre[class*='language-']),
+.markdown-content :deep(code[class*='language-']) {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.markdown-content :deep(a) {
+  overflow-wrap: break-word;
+  word-break: break-all;
+}
 </style>
