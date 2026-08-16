@@ -1,8 +1,46 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
+import katex from 'katex'
+import 'katex/dist/katex.min.css'
 
 createApp(App).use(router).mount('#app')
+
+/**
+ * Parse LaTeX math expressions using KaTeX
+ *
+ * Supports:
+ * - Inline: $formula$ ... or \(formula\)
+ * - Display: $$formula$$ ... or \[formula\]
+ *
+ * @param {string} text - Text potentially containing LaTeX
+ * @returns {string} - Text with LaTeX replaced by rendered KaTeX HTML
+ */
+function parseLatex(text) {
+  if (!text || typeof katex === 'undefined') return text
+
+  let result = text
+
+  // Parse display math: $$...$$ (must be before $...)
+  result = result.replace(/\$\$([\s\S]*?)\$\$/g, (_, formula) => {
+    try {
+      return '<div class="katex-display">' + katex.renderToString(formula.trim(), { displayMode: true, throwOnError: false }) + '</div>'
+    } catch (e) {
+      return `<span class="katex-error" title="${e.message}">${_.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</span>`
+    }
+  })
+
+  // Parse inline math: $...$
+  result = result.replace(/\$((?!\$)((?:[^$\\]|\\.)+))\$/g, (_, formula) => {
+    try {
+      return katex.renderToString(formula.trim(), { displayMode: false, throwOnError: false })
+    } catch (e) {
+      return `<span class="katex-error" title="${e.message}">${_.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</span>`
+    }
+  })
+
+  return result
+}
 
 /**
  * Parse Obsidian-style syntax in Markdown content and convert it to HTML
@@ -24,14 +62,13 @@ export function parseObsidianLinks(content, options = { useRouterLinks: true }) 
     return `<img src="/images/${path}" alt="${path}" class="obsidian-image">`
   })
 
-  // Process regular Obsidian links: [[Page]] -> <router-link to="/article/Page">Page</router-link>
-  // or [[Page|Custom text]] -> <router-link to="/article/Page">Custom text</router-link>
+  // Process regular Obsidian links: [[Page]] -> router-link
+  // or [[Page|Custom text]] -> router-link with alias
   processedContent = processedContent.replace(/\[\[(.*?)(?:\|(.*?))?\]\]/g, (_, link, alias) => {
     const displayText = alias ? alias.trim() : link.trim()
     const trimmedLink = link.trim()
     const encodedLink = encodeURIComponent(trimmedLink)
 
-    // Use /article/ for all links (both .md and .lua.md)
     const routePath = `/article/${encodedLink}`
 
     if (options.useRouterLinks) {
@@ -40,7 +77,7 @@ export function parseObsidianLinks(content, options = { useRouterLinks: true }) 
   })
 
   // Process footnotes: ^[footnote text] -> <sup class="footnote-ref"><a href="#footnote-1" id="footnote-ref-1">[1]</a></sup>
-  processedContent = processedContent.replace(/\^\[(.*?)\]/g, (_, footnoteText) => {
+  processedContent = processedContent.replace(/^\[(.*?)\]$/g, (_, footnoteText) => {
     const footnoteId = footnotes.length + 1
     footnotes.push(footnoteText.trim())
     return `<sup class="footnote-ref"><a href="#footnote-${footnoteId}" id="footnote-ref-${footnoteId}">[${footnoteId}]</a></sup>`
@@ -58,6 +95,9 @@ export function parseObsidianLinks(content, options = { useRouterLinks: true }) 
     footnoteSection += '</ol></div>'
     processedContent += footnoteSection
   }
+
+  // Parse LaTeX math expressions ($...$, $$...$$)
+  processedContent = parseLatex(processedContent)
 
   return processedContent
 }

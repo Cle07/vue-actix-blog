@@ -18,11 +18,10 @@ const error = ref(null)
 const parsedContent = computed(() => {
   if (!article.value?.content) return ''
 
-  // FIRST process Obsidian-specific syntax on the raw markdown
-  const obsidianProcessed = parseObsidianLinks(article.value.content)
-
-  // THEN convert markdown to HTML
-  return marked.parse(obsidianProcessed)
+  // FIRST convert markdown to HTML
+  const rawHtml = marked.parse(article.value.content)
+  // THEN process Obsidian-specific syntax and LaTeX on the HTML
+  return parseObsidianLinks(rawHtml)
 })
 
 onMounted(async () => {
@@ -233,8 +232,31 @@ ul.backlinks a:hover {
   overflow-wrap: break-word;
 }
 
-.markdown-content :deep(a) {
-  overflow-wrap: break-word;
-  word-break: break-all;
+.markdown-content :deep(.katex-display) {
+  margin: 1rem 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.5rem 0;
+}
+
+.markdown-content :deep(.katex) {
+  color: #f5f5f5;
+  font-size: 1.1em;
+}
+
+.markdown-content :deep(.katex .mord),
+.markdown-content :deep(.katex .mbin),
+.markdown-content :deep(.katex .mrel),
+.markdown-content :deep(.katex .mop),
+.markdown-content :deep(.katex .mpunct),
+.markdown-content :deep(.katex .mopen),
+.markdown-content :deep(.katex .mclose) {
+  color: #f5f5f5;
+}
+
+.markdown-content :deep(.katex-error) {
+  color: #ff6b6b;
+  font-family: monospace;
+  font-size: 0.9rem;
 }
 </style>

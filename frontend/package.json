@@ -11,6 +11,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "katex": "^0.18.4",
     "marked": "^15.0.12",
     "prismjs": "^1.30.0",
     "vue": "^3.5.15",
