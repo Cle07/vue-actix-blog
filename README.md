@@ -1,8 +1,15 @@
-# Vue + Actix Web Integration
+# Vue + Actix Web Minimal Blog
 
 This project demonstrates how to integrate a Vue.js frontend with an Actix Web backend in a single project.
 
-The database of the website is synchronized with the articles/ folder. You can use Markdown to write new articles, and Obsidian-style links.
+In articles/ create a home.md and about.md then create your blog like you would make an Obsidian.
+
+## Features
+
+- Obsidian-Markdown parsing, including internal links, URLs, LateX, footnotes, codeblocks with highligthing.
+- Timeline viewer with sorting by date.
+- Luau running in backend using lua codeblocks.
+- A dockerfile compatible with [fly.io](https://fly.io/).
 
 ## Project Structure
 
@@ -23,9 +30,8 @@ vue-actix/
 │   └── ...           # Rest of Vue project files
 ```
 
-## Getting Started
+## Usage
 
-In articles/ create a home.md and about.md then create your blog like a simple Obsidian.
 
 ### Prerequisites
 
@@ -68,6 +74,18 @@ You can use the Dockerfile for that, or :
 
 3. Access your application at [http://localhost:8080](http://localhost:8080)
 
+### Timeline viewer
+
+To create timeline articles, name your file `{YOUR_FILE_NAME}.timeline.md`. The format is :
+
+```markdown
+# 16/08/2026
+LaTeX formula rendering is now available!
+
+# 19/07/2026
+Added timeline component for this changelog.
+```
+
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License.
