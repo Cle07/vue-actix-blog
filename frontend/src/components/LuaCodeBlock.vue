@@ -31,7 +31,6 @@ const runCode = async () => {
   hasRun.value = true
   output.value = 'Running Lua code...'
   try {
-    // Combine context with current code
     const fullCode = `${props.context}\n${props.defaultCode}`
     console.log('Sending code with context:', fullCode)
     const response = await fetch('/api/lua/run', {
@@ -49,7 +48,7 @@ const runCode = async () => {
     const data = await response.json()
     console.log('Response data:', data)
 
-    // Extract content between first parentheses
+    // Legacy : extrait le contenu entre la 1re paire de parenthèses si présent
     const outputText = data.output || 'No output received'
     const match = outputText.match(/\(([^)]*)\)/)
     output.value = match ? match[1] : outputText
@@ -60,7 +59,6 @@ const runCode = async () => {
 }
 
 onMounted(() => {
-  // Highlight the code
   const codeElement = document.querySelector(`#code-block-${props.id}`)
   if (codeElement) {
     const highlighted = Prism.highlight(props.defaultCode, Prism.languages.lua, 'lua')
@@ -113,18 +111,18 @@ onMounted(() => {
   gap: 10px;
   flex: 0 0 auto;
   padding: 10px 16px;
-  background-color: rgba(66, 184, 131, 0.1);
-  color: #f5f5f5;
-  border: 1px solid #42b883;
+  background-color: var(--color-lua-soft);
+  color: var(--color-fg);
+  border: var(--border-width-thin) solid var(--color-lua);
   border-bottom: none;
   font-size: 14px;
   font-weight: bold;
-  font-family: 'Departure Mono';
+  font-family: var(--font-code);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 #cell-id {
-  color: grey;
+  color: var(--color-fg-subtle);
 }
 
 #button-group {
@@ -134,11 +132,11 @@ onMounted(() => {
 
 button {
   padding: 6px 6px;
-  background-color: #42b883;
-  color: #1a1a1a;
+  background-color: var(--color-lua);
+  color: var(--color-bg-elevated);
   border-radius: 1px;
   border: none;
-  font-family: 'Departure Mono';
+  font-family: var(--font-code);
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -153,20 +151,18 @@ button svg {
 }
 
 button:hover {
-  background-color: #5ce2fa;
-  color: #1a1a1a;
+  background-color: var(--color-accent);
+  color: var(--color-bg-elevated);
   transform: translateY(-1px);
 }
 
-/* Change max-width and margin here for
-changing the whole block without breaking */
 #code-container {
   display: flex;
   flex-direction: column;
   width: 100%;
   max-width: 85%;
   margin: 1em auto;
-  border: 2px solid #42b883;
+  border: var(--border-width-md) solid var(--color-lua);
   border-radius: 1px;
   overflow: hidden;
 }
@@ -181,10 +177,10 @@ changing the whole block without breaking */
   margin: 0;
   padding: 16px;
   width: 100%;
-  font-family: 'Departure Mono', monospace;
+  font-family: var(--font-code);
   font-size: 14px;
   line-height: 1.6;
-  background-color: #1a1a1a;
+  background-color: var(--color-bg-elevated);
   border: none;
   box-sizing: border-box;
   overflow-x: auto;
@@ -196,17 +192,17 @@ changing the whole block without breaking */
 }
 
 #code-display::-webkit-scrollbar-track {
-  background: #2a2a2a;
-  border-radius: 4px;
+  background: var(--color-bg-muted);
+  border-radius: var(--radius-sm);
 }
 
 #code-display::-webkit-scrollbar-thumb {
-  background: #42b883;
-  border-radius: 4px;
+  background: var(--color-lua);
+  border-radius: var(--radius-sm);
 }
 
 #code-display::-webkit-scrollbar-thumb:hover {
-  background: #5ce2fa;
+  background: var(--color-accent);
 }
 
 #code-display :deep(*) {
@@ -215,7 +211,7 @@ changing the whole block without breaking */
 
 #code-display code {
   font-family: inherit;
-  color: #f5f5f5;
+  color: var(--color-fg);
   background: transparent !important;
 }
 
@@ -225,11 +221,11 @@ changing the whole block without breaking */
   width: 100%;
   height: fit-content;
   overflow: auto;
-  background-color: rgba(92, 226, 250, 0.1);
-  color: #5ce2fa;
+  background-color: var(--color-accent-soft);
+  color: var(--color-accent);
   box-sizing: border-box;
-  border-top: 1px solid #333;
-  font-family: 'Departure Mono';
+  border-top: var(--border-width-thin) solid var(--color-border-muted);
+  font-family: var(--font-code);
   font-size: 13px;
   line-height: 1.4;
 }
@@ -240,16 +236,16 @@ changing the whole block without breaking */
 }
 
 #code-output::-webkit-scrollbar-track {
-  background: rgba(92, 226, 250, 0.1);
-  border-radius: 4px;
+  background: var(--color-accent-soft);
+  border-radius: var(--radius-sm);
 }
 
 #code-output::-webkit-scrollbar-thumb {
-  background: #5ce2fa;
-  border-radius: 4px;
+  background: var(--color-accent);
+  border-radius: var(--radius-sm);
 }
 
 #code-output::-webkit-scrollbar-thumb:hover {
-  background: #42b883;
+  background: var(--color-lua);
 }
 </style>

@@ -13,7 +13,6 @@ const time = ref(
 )
 
 onMounted(() => {
-  // Update time every 100ms (0.1 seconds)
   timer.value = setInterval(() => {
     const now = new Date()
     const timeString = now.toLocaleTimeString('en-US', {
@@ -28,8 +27,7 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
-  // Clean up interval when component is unmounted
-  clearInterval(timer)
+  clearInterval(timer.value)
 })
 </script>
 <template>
@@ -81,20 +79,20 @@ nav {
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
-  max-width: 900px;
+  max-width: var(--content-max-width);
   height: auto;
   z-index: 1000;
-  background-color: #111314;
+  background-color: var(--color-bg);
   display: flex;
   align-items: center;
-  border: 3px solid #f5f5f5;
+  border: var(--border-width) solid var(--color-border);
 }
 
 #outer-container {
   display: flex;
   flex-direction: column;
   width: 100%;
-  background-color: #111314;
+  background-color: var(--color-bg);
   gap: 0;
   align-items: center;
   justify-content: center;
@@ -120,7 +118,7 @@ nav {
 
   p {
     padding: 0.3rem;
-    font-size: 0.9rem;
+    font-size: var(--font-size-xs);
   }
 }
 
@@ -130,7 +128,7 @@ nav {
 }
 
 p {
-  border: 3px solid #f5f5f5;
+  border: var(--border-width) solid var(--color-border);
   padding: 0.7rem;
   margin: 0;
   text-align: center;
@@ -138,13 +136,13 @@ p {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.95rem;
-  background-color: #111314;
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  background-color: var(--color-bg);
 }
 
 a {
-  color: #f5f5f5;
+  color: var(--color-fg);
   text-decoration: none;
   width: 100%;
   display: block;

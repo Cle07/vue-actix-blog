@@ -45,7 +45,7 @@ const runCode = async () => {
     const data = await response.json()
     console.log('Response data:', data)
 
-    // Extract content between first parentheses
+    // Legacy : extrait le contenu entre la 1re paire de parenthèses si présent
     const outputText = data.output || 'No output received'
     const match = outputText.match(/\(([^)]*)\)/)
     output.value = match ? match[1] : outputText
@@ -56,9 +56,7 @@ const runCode = async () => {
 }
 
 onMounted(() => {
-  // Initialize content and highlighting
   updateHighlight()
-  // Add event listeners to buttons
   document.querySelector('#run-button').addEventListener('click', runCode)
   document.querySelector('#reset-button').addEventListener('click', resetCode)
 })
@@ -99,9 +97,9 @@ watch(code, () => {
   align-items: center;
   flex: 0 0 auto;
   padding: 10px;
-  background-color: #111314;
-  color: #f5f5f5;
-  border: 2px solid #f5f5f5;
+  background-color: var(--color-bg);
+  color: var(--color-fg);
+  border: var(--border-width-md) solid var(--color-border);
   font-size: small;
 }
 
@@ -109,14 +107,15 @@ watch(code, () => {
 #run-button {
   padding: 5px 10px;
   background-color: inherit;
-  color: #f5f5f5;
+  color: var(--color-fg);
   border-radius: 1px;
-  border: 1px solid #f5f5f5;
+  border: var(--border-width-thin) solid var(--color-border);
   font-family: inherit;
 }
 
 #reset-button:hover {
-  background-color: white;
+  background-color: var(--color-fg);
+  color: var(--color-bg);
 }
 
 #code-container {
@@ -144,7 +143,7 @@ watch(code, () => {
   border: 0;
   width: 100%;
   height: fit-content;
-  font-family: 'Departure Mono', monospace;
+  font-family: var(--font-code);
   font-size: 15px;
   line-height: 1.5;
   overflow: auto;
@@ -158,12 +157,12 @@ watch(code, () => {
   left: 0;
   color: transparent;
   background: transparent;
-  caret-color: #f5f5f5;
+  caret-color: var(--color-fg);
   resize: none;
   z-index: 1;
   height: 100%;
   min-height: 100%;
-  border: 1px solid #f5f5f5;
+  border: var(--border-width-thin) solid var(--color-border);
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -178,10 +177,10 @@ watch(code, () => {
   width: 100%;
   height: fit-content;
   overflow: auto;
-  background-color: #111314;
+  background-color: var(--color-bg);
   box-sizing: border-box;
-  border: 1px solid #f5f5f5;
-  font-family: 'Departure Mono';
+  border: var(--border-width-thin) solid var(--color-border);
+  font-family: var(--font-code);
   font-size: 15px;
 }
 </style>

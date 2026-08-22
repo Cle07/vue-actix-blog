@@ -4,3 +4,4 @@ Cargo.lock
 /articles/*.md
 articles.db
 temp.lua
+LIMITATIONS.md

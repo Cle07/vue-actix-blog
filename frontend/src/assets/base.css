@@ -1,53 +1,58 @@
-/* color palette from <https://github.com/vuejs/theme> */
+/* Tokens du thème (digital garden dark mono). */
+
 :root {
-  --vt-c-white: #ffffff;
-  --vt-c-white-soft: #f8f8f8;
-  --vt-c-white-mute: #f2f2f2;
+  /* Surfaces */
+  --color-bg: #111314;
+  --color-bg-elevated: #1a1a1a;
+  --color-bg-muted: #2a2a2a;
+  --color-bg-soft: rgba(255, 255, 255, 0.05);
 
-  --vt-c-black: #181818;
-  --vt-c-black-soft: #222222;
-  --vt-c-black-mute: #282828;
+  /* Texte */
+  --color-fg: #f5f5f5;
+  --color-fg-muted: #888888;
+  --color-fg-subtle: grey;
 
-  --vt-c-indigo: #2c3e50;
+  /* Accents */
+  --color-accent: #5ce2fa;
+  --color-accent-soft: rgba(92, 226, 250, 0.1);
+  --color-link: #5ce2fa;
+  --color-garden: #6dd4a3;
+  --color-garden-hover: #8de4b8;
+  --color-garden-soft: rgba(109, 212, 163, 0.3);
+  --color-garden-soft-hover: rgba(141, 228, 184, 0.4);
+  --color-lua: #42b883;
+  --color-lua-soft: rgba(66, 184, 131, 0.1);
+  --color-error: #ff6b6b;
 
-  --vt-c-divider-light-1: rgba(60, 60, 60, 0.29);
-  --vt-c-divider-light-2: rgba(60, 60, 60, 0.12);
-  --vt-c-divider-dark-1: rgba(84, 84, 84, 0.65);
-  --vt-c-divider-dark-2: rgba(84, 84, 84, 0.48);
+  /* Bordures */
+  --color-border: #f5f5f5;
+  --color-border-muted: #333333;
+  --color-border-subtle: #555555;
+  --color-border-backlink: #666666;
 
-  --vt-c-text-light-1: var(--vt-c-indigo);
-  --vt-c-text-light-2: rgba(60, 60, 60, 0.66);
-  --vt-c-text-dark-1: var(--vt-c-white);
-  --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
-}
+  /* Typo — body = JetBrains (UI/articles) ; code = Departure (blocs code / Lua) */
+  --font-body: 'JetBrains Mono', monospace;
+  --font-code: 'Departure Mono', 'JetBrains Mono', monospace;
+  --font-mono: var(--font-body); /* alias rétrocompat → body, pas code */
+  --font-size-base: 0.95rem;
+  --font-size-sm: 0.85rem;
+  --font-size-xs: 0.9rem;
+  --line-height-body: 1.6;
 
-/* semantic color variables for this project */
-:root {
-  --color-background: var(--vt-c-white);
-  --color-background-soft: var(--vt-c-white-soft);
-  --color-background-mute: var(--vt-c-white-mute);
-
-  --color-border: var(--vt-c-divider-light-2);
-  --color-border-hover: var(--vt-c-divider-light-1);
-
-  --color-heading: var(--vt-c-text-light-1);
-  --color-text: var(--vt-c-text-light-1);
-
-  --section-gap: 160px;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-background: var(--vt-c-black);
-    --color-background-soft: var(--vt-c-black-soft);
-    --color-background-mute: var(--vt-c-black-mute);
-
-    --color-border: var(--vt-c-divider-dark-2);
-    --color-border-hover: var(--vt-c-divider-dark-1);
-
-    --color-heading: var(--vt-c-text-dark-1);
-    --color-text: var(--vt-c-text-dark-2);
-  }
+  /* Layout */
+  --content-max-width: 900px;
+  --border-width: 3px;
+  --border-width-thin: 1px;
+  --border-width-md: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --nav-offset: 6em;
 }
 
 *,
@@ -55,33 +60,4 @@
 *::after {
   box-sizing: border-box;
   margin: 0;
-  font-weight: normal;
-}
-
-body {
-  min-height: 100vh;
-  color: var(--color-text);
-  background: var(--color-background);
-  transition:
-    color 0.5s,
-    background-color 0.5s;
-  line-height: 1.6;
-  font-family:
-    Inter,
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    Oxygen,
-    Ubuntu,
-    Cantarell,
-    'Fira Sans',
-    'Droid Sans',
-    'Helvetica Neue',
-    'JetBrains Mono',
-    sans-serif;
-  font-size: 15px;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }

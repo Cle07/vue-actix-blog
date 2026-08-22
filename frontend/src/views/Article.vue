@@ -18,9 +18,8 @@ const error = ref(null)
 const parsedContent = computed(() => {
   if (!article.value?.content) return ''
 
-  // FIRST convert markdown to HTML
+  // D'abord markdown → HTML, puis syntaxe Obsidian / LaTeX
   const rawHtml = marked.parse(article.value.content)
-  // THEN process Obsidian-specific syntax and LaTeX on the HTML
   return parseObsidianLinks(rawHtml)
 })
 
@@ -45,7 +44,6 @@ onMounted(async () => {
       if (route) {
         router.push(route)
       } else if (link) {
-        // Fallback for backward compatibility
         router.push(`/article/${link}`)
       }
     }
@@ -54,9 +52,9 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="article">
-    <div v-if="loading" class="loading">Loading article...</div>
-    <div v-else-if="error" class="error">
+  <div class="page-article">
+    <div v-if="loading" class="page-status">Loading article...</div>
+    <div v-else-if="error" class="page-status page-status--error">
       {{ error }}
     </div>
     <div v-else-if="article" class="content">
@@ -79,184 +77,3 @@ onMounted(async () => {
     </div>
   </div>
 </template>
-
-<style scoped>
-.article {
-  padding: 1.5rem;
-  font-family: 'JetBrains Mono', monospace;
-}
-
-.loading,
-.error {
-  text-align: center;
-  padding: 2rem;
-  color: #f5f5f5;
-}
-
-.error {
-  color: #ff6b6b;
-  border: 2px solid #ff6b6b;
-  border-radius: 4px;
-  padding: 1rem;
-}
-
-h1 {
-  color: #f5f5f5;
-  font-size: 1.8rem;
-  margin-bottom: 1rem;
-  border-bottom: 4px solid #f5f5f5;
-  padding-bottom: 0.5rem;
-}
-
-h2 {
-  color: #f5f5f5;
-  font-size: 1.4rem;
-  margin-top: 2rem;
-  margin-bottom: 1rem;
-}
-
-.markdown-content {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 2rem;
-  line-height: 1.6;
-  gap: 0px;
-}
-
-.markdown-content :deep(a) {
-  color: #5ce2fa;
-}
-
-.markdown-content :deep(.obsidian-image) {
-  max-width: 100%;
-  height: auto;
-  margin: 1rem 0;
-  border-radius: 4px;
-  align-self: center;
-}
-
-.markdown-content :deep(.obsidian-link) {
-  color: #6dd4a3;
-  background-color: rgba(109, 212, 163, 0.3);
-  text-decoration: none;
-  cursor: pointer;
-  border: none;
-  padding: 0.5px 2px;
-  border-radius: 4px;
-  font: inherit;
-}
-
-.markdown-content :deep(.obsidian-link:hover) {
-  color: #8de4b8;
-  background-color: rgba(141, 228, 184, 0.4);
-}
-
-.markdown-content :deep(.footnotes) {
-  margin-top: 0px;
-  padding-top: 1rem;
-  border-top: 1px solid #333;
-  font-size: 0.9rem;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
-
-.markdown-content :deep(iframe) {
-  margin: 1rem 0px;
-  align-self: center;
-  border: 2px solid #333;
-}
-
-.links-section {
-  margin-top: 2rem;
-  padding-top: 1rem;
-  border-top: 2px solid #333;
-}
-
-ul.links {
-  margin-left: 1.5rem;
-  margin-bottom: 1rem;
-  border-left: 4px solid #333;
-  padding-left: 1rem;
-}
-
-ul.links li {
-  margin-bottom: 0.5rem;
-  list-style-type: square;
-}
-
-ul.links a {
-  color: #42b883;
-  text-decoration: none;
-}
-
-ul.links a:hover {
-  text-decoration: underline;
-}
-
-.backlinks-section {
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 2px solid #333;
-}
-
-ul.backlinks {
-  margin-left: 1.5rem;
-  margin-bottom: 1rem;
-  border-left: 4px solid #666;
-  padding-left: 1rem;
-}
-
-ul.backlinks li {
-  margin-bottom: 0.5rem;
-  list-style-type: square;
-}
-
-ul.backlinks a {
-  color: #6dd4a3;
-  text-decoration: none;
-}
-
-ul.backlinks a:hover {
-  text-decoration: underline;
-}
-
-/* ============================================================
- * FIX: wrapping du texte dans les blocs de code et les URLs
- * (override de Prism qui force white-space: pre / word-wrap: normal)
- * ============================================================ */
-.markdown-content :deep(pre),
-.markdown-content :deep(pre[class*='language-']),
-.markdown-content :deep(code[class*='language-']) {
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
-
-.markdown-content :deep(.katex-display) {
-  margin: 1rem 0;
-  overflow-x: auto;
-  overflow-y: hidden;
-  padding: 0.5rem 0;
-}
-
-.markdown-content :deep(.katex) {
-  color: #f5f5f5;
-  font-size: 1.1em;
-}
-
-.markdown-content :deep(.katex .mord),
-.markdown-content :deep(.katex .mbin),
-.markdown-content :deep(.katex .mrel),
-.markdown-content :deep(.katex .mop),
-.markdown-content :deep(.katex .mpunct),
-.markdown-content :deep(.katex .mopen),
-.markdown-content :deep(.katex .mclose) {
-  color: #f5f5f5;
-}
-
-.markdown-content :deep(.katex-error) {
-  color: #ff6b6b;
-  font-family: monospace;
-  font-size: 0.9rem;
-}
-</style>

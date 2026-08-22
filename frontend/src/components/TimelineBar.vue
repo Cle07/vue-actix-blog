@@ -38,43 +38,43 @@ function toggleSort() {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.75rem 1rem;
-  margin-bottom: 1.5rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid #333;
-  border-radius: 8px;
+  padding: var(--space-sm) var(--space-md);
+  margin-bottom: var(--space-lg);
+  background: var(--color-bg-soft);
+  border: var(--border-width-thin) solid var(--color-border-muted);
+  border-radius: var(--radius-lg);
 }
 
 .bar-left {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: var(--space-sm);
 }
 
 .bar-title {
   font-weight: 700;
-  color: #f5f5f5;
+  color: var(--color-fg);
 }
 
 .bar-count {
-  color: #888;
-  font-size: 0.85rem;
+  color: var(--color-fg-muted);
+  font-size: var(--font-size-sm);
 }
 
 .sort-btn {
   padding: 0.4rem 0.8rem;
-  border: 1px solid #555;
-  border-radius: 6px;
+  border: var(--border-width-thin) solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
   background: transparent;
-  color: #5ce2fa;
+  color: var(--color-accent);
   cursor: pointer;
   font-family: inherit;
-  font-size: 0.85rem;
+  font-size: var(--font-size-sm);
   transition: all 0.2s;
 }
 
 .sort-btn:hover {
-  background: rgba(92, 226, 250, 0.1);
-  border-color: #5ce2fa;
+  background: var(--color-accent-soft);
+  border-color: var(--color-accent);
 }
 </style>

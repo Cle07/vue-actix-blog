@@ -1,19 +1,285 @@
 @import './base.css';
 
-#app {
-  margin: 0 auto;
-  padding: 2rem;
-  font-weight: normal;
+/* Polices locales */
+@font-face {
+  font-family: 'Departure Mono';
+  src:
+    url('@/assets/fonts/DepartureMono-Regular.woff2') format('woff2'),
+    url('@/assets/fonts/DepartureMono-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
 }
 
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('@/assets/fonts/JetBrainsMono-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Shell global */
+html,
+body {
+  background-color: var(--color-bg);
+  color: var(--color-fg);
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: var(--line-height-body);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#app {
+  margin: 0 auto;
+  font-weight: normal;
+  min-height: 100vh;
+}
+
+/* Cadre principal (hors NavBar fixed) */
+main.app-shell {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-body);
+  flex: 1 1 auto;
+  width: 100%;
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 0;
+  padding-top: var(--nav-offset);
+  border: var(--border-width) solid var(--color-border);
+}
+
+main.app-shell > .content {
   padding: 3px;
 }
 
-a:hover {
-  background-color: hsla(160, 100%, 37%, 0.2);
+/* Liens de base */
+a {
+  color: var(--color-link);
+  text-decoration: none;
+}
+
+/* ---------- Markdown partagé (vues article / timeline / notebook) ---------- */
+
+.markdown-content {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: var(--space-xl);
+  line-height: var(--line-height-body);
+  gap: 0;
+  color: var(--color-fg);
+  font-family: var(--font-body);
+}
+
+.markdown-content h1 {
+  color: var(--color-fg);
+  font-size: 1.8rem;
+  margin-bottom: var(--space-md);
+  border-bottom: 4px solid var(--color-fg);
+  padding-bottom: var(--space-xs);
+}
+
+.markdown-content h2 {
+  color: var(--color-fg);
+  font-size: 1.4rem;
+  margin-top: var(--space-xl);
+  margin-bottom: var(--space-md);
+}
+
+.markdown-content h3 {
+  color: var(--color-fg);
+  font-size: 1.2rem;
+  margin-top: var(--space-lg);
+  margin-bottom: 0.8rem;
+}
+
+.markdown-content p {
+  margin-bottom: var(--space-md);
+  color: var(--color-fg);
+}
+
+.markdown-content ul,
+.markdown-content ol {
+  margin: 0 0 var(--space-md) var(--space-lg);
+  padding-left: var(--space-md);
+}
+
+.markdown-content li {
+  margin-bottom: var(--space-xs);
+}
+
+.markdown-content li:last-child {
+  margin-bottom: 0;
+}
+
+.markdown-content a {
+  color: var(--color-link);
+}
+
+.markdown-content a:hover {
+  text-decoration: underline;
+}
+
+.markdown-content .obsidian-image {
+  max-width: 100%;
+  height: auto;
+  margin: var(--space-md) 0;
+  border-radius: var(--radius-sm);
+  align-self: center;
+}
+
+.markdown-content .obsidian-link,
+.obsidian-link.custom-link {
+  color: var(--color-garden);
+  background-color: var(--color-garden-soft);
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  padding: 0.5px 2px;
+  border-radius: var(--radius-sm);
+  font: inherit;
+}
+
+.markdown-content .obsidian-link:hover,
+.obsidian-link.custom-link:hover {
+  color: var(--color-garden-hover);
+  background-color: var(--color-garden-soft-hover);
+  text-decoration: none;
+}
+
+.markdown-content .footnotes {
+  margin-top: 0;
+  padding-top: var(--space-md);
+  border-top: var(--border-width-thin) solid var(--color-border-muted);
+  font-size: var(--font-size-xs);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.markdown-content iframe {
+  margin: var(--space-md) 0;
+  align-self: center;
+  border: var(--border-width-md) solid var(--color-border-muted);
+}
+
+.markdown-content pre {
+  background-color: var(--color-bg-elevated);
+  padding: var(--space-md);
+  border: var(--border-width-thin) solid var(--color-border-muted);
+  border-radius: var(--radius-sm);
+  overflow-x: auto;
+  margin: var(--space-md) 0;
+  font-family: var(--font-code);
+}
+
+.markdown-content code {
+  background-color: var(--color-border-muted);
+  color: var(--color-fg);
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  font-family: var(--font-code);
+}
+
+/* Override Prism : wrapping longs blocs / URLs */
+.markdown-content pre,
+.markdown-content pre[class*='language-'],
+.markdown-content code[class*='language-'] {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* KaTeX */
+.markdown-content .katex-display {
+  margin: var(--space-md) 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: var(--space-xs) 0;
+}
+
+.markdown-content .katex {
+  color: var(--color-fg);
+  font-size: 1.1em;
+}
+
+.markdown-content .katex .mord,
+.markdown-content .katex .mbin,
+.markdown-content .katex .mrel,
+.markdown-content .katex .mop,
+.markdown-content .katex .mpunct,
+.markdown-content .katex .mopen,
+.markdown-content .katex .mclose {
+  color: var(--color-fg);
+}
+
+.markdown-content .katex-error {
+  color: var(--color-error);
+  font-family: var(--font-code);
+  font-size: var(--font-size-xs);
+}
+
+/* Backlinks (partagé Article + Timeline) */
+.backlinks-section {
+  margin-top: var(--space-md);
+  padding-top: var(--space-md);
+  border-top: var(--border-width-md) solid var(--color-border-muted);
+}
+
+.backlinks-section h2 {
+  color: var(--color-fg);
+  font-size: 1.4rem;
+  margin-top: var(--space-xl);
+  margin-bottom: var(--space-md);
+}
+
+ul.backlinks {
+  margin-left: var(--space-lg);
+  margin-bottom: var(--space-md);
+  border-left: 4px solid var(--color-border-backlink);
+  padding-left: var(--space-md);
+}
+
+ul.backlinks li {
+  margin-bottom: var(--space-xs);
+  list-style-type: square;
+}
+
+ul.backlinks a {
+  color: var(--color-garden);
+  text-decoration: none;
+}
+
+ul.backlinks a:hover {
+  text-decoration: underline;
+}
+
+/* États de chargement / erreur partagés */
+.page-status {
+  text-align: center;
+  padding: var(--space-xl);
+  color: var(--color-fg);
+  font-family: var(--font-body);
+}
+
+.page-status--error {
+  color: var(--color-error);
+  border: var(--border-width-md) solid var(--color-error);
+  border-radius: var(--radius-sm);
+  padding: var(--space-md);
+}
+
+/* Conteneur page type article */
+.page-article {
+  padding: var(--space-lg);
+  padding-top: calc(var(--space-lg) + var(--space-md));
+  font-family: var(--font-body);
 }
