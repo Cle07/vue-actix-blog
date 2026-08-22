@@ -133,7 +133,7 @@ onMounted(() => {
 button {
   padding: 6px 6px;
   background-color: var(--color-lua);
-  color: var(--color-bg-elevated);
+  color: var(--color-btn-text);
   border-radius: 1px;
   border: none;
   font-family: var(--font-code);
@@ -152,7 +152,7 @@ button svg {
 
 button:hover {
   background-color: var(--color-accent);
-  color: var(--color-bg-elevated);
+  color: var(--color-btn-text);
   transform: translateY(-1px);
 }
 
@@ -180,7 +180,7 @@ button:hover {
   font-family: var(--font-code);
   font-size: 14px;
   line-height: 1.6;
-  background-color: var(--color-bg-elevated);
+  background-color: var(--color-btn-text);
   border: none;
   box-sizing: border-box;
   overflow-x: auto;

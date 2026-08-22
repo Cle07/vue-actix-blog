@@ -1,0 +1,42 @@
+/* Palette claire — inspirée du drapeau lesbien
+   (oranges #D62900/#FF9B55, blanc #FFFFFF, rose #D461A6, rouge #A50062). */
+
+html[data-theme='light'] {
+  /* Surfaces — bande blanche réchauffée */
+  --color-bg: #fff6ef;
+  --color-bg-elevated: #ffeadd;
+  --color-bg-muted: #ffdcc4;
+  --color-bg-soft: rgba(214, 41, 0, 0.05);
+
+  /* Texte — prune profond (contraste sur clair) */
+  --color-fg: #43222f;
+  --color-fg-muted: #8d6070;
+  --color-fg-subtle: #a88493;
+
+  /* Accents — rose de la bande basse */
+  --color-accent: #d461a6;
+  --color-accent-soft: rgba(212, 97, 166, 0.14);
+  /* Wikilinks internes (garden) — orange vif de la bande haute */
+  --color-garden: #e05c1f;
+  --color-garden-hover: #b23c10;
+  --color-garden-soft: rgba(214, 73, 26, 0.12);
+  --color-garden-soft-hover: rgba(214, 73, 26, 0.22);
+  /* Liens externes / footnotes — rose */
+  --color-link-external: #d461a6;
+  --color-lua: #c04a86;
+  --color-lua-soft: rgba(212, 97, 166, 0.1);
+  --color-error: #a50062;
+
+  /* Bordures */
+  --color-border: #43222f;
+  --color-border-muted: #eec3ab;
+  --color-border-subtle: #dda288;
+  --color-border-backlink: #d9a99a;
+
+  /* Chrome boutons (texte sur fond plein) */
+  --color-btn-text: #fff6ef;
+
+  /* Bouton home */
+  --home-icon-filter: brightness(0) saturate(100%) invert(12%) sepia(18%) saturate(2427%) hue-rotate(289deg) brightness(92%) contrast(91%);
+  --color-accent-soft-hover: rgba(212, 97, 166, 0.25);
+}

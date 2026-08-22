@@ -1,35 +1,6 @@
-/* Tokens du thème (digital garden dark mono). */
+/* Tokens structurels (typo, layout) — les couleurs vivent dans theme-*.css */
 
 :root {
-  /* Surfaces */
-  --color-bg: #111314;
-  --color-bg-elevated: #1a1a1a;
-  --color-bg-muted: #2a2a2a;
-  --color-bg-soft: rgba(255, 255, 255, 0.05);
-
-  /* Texte */
-  --color-fg: #f5f5f5;
-  --color-fg-muted: #888888;
-  --color-fg-subtle: grey;
-
-  /* Accents */
-  --color-accent: #5ce2fa;
-  --color-accent-soft: rgba(92, 226, 250, 0.1);
-  --color-link: #5ce2fa;
-  --color-garden: #6dd4a3;
-  --color-garden-hover: #8de4b8;
-  --color-garden-soft: rgba(109, 212, 163, 0.3);
-  --color-garden-soft-hover: rgba(141, 228, 184, 0.4);
-  --color-lua: #42b883;
-  --color-lua-soft: rgba(66, 184, 131, 0.1);
-  --color-error: #ff6b6b;
-
-  /* Bordures */
-  --color-border: #f5f5f5;
-  --color-border-muted: #333333;
-  --color-border-subtle: #555555;
-  --color-border-backlink: #666666;
-
   /* Typo — body = JetBrains (UI/articles) ; code = Departure (blocs code / Lua) */
   --font-body: 'JetBrains Mono', monospace;
   --font-code: 'Departure Mono', 'JetBrains Mono', monospace;

@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { toggleTheme } from '@/main'
 
 const timer = ref(null)
 const time = ref(
@@ -11,6 +12,16 @@ const time = ref(
     fractionalSecondDigits: 3,
   }),
 )
+
+const themeIcon = () =>
+  document.documentElement.dataset.theme === 'dark' ? '☀' : '☾'
+
+const currentThemeIcon = ref(themeIcon())
+
+const switchTheme = () => {
+  toggleTheme()
+  currentThemeIcon.value = themeIcon()
+}
 
 onMounted(() => {
   timer.value = setInterval(() => {
@@ -35,14 +46,13 @@ onBeforeUnmount(() => {
     <div id="outer-container">
       <div class="inner-container">
         <div id="#home" class="grid-item">
-          <p>
+          <p class="home-cell">
             <router-link to="/">
               <img
                 src="@/assets/home_pixel.svg"
                 alt="Home"
                 height="24"
                 width="24"
-                style="filter: invert(100%)"
               />
             </router-link>
           </p>
@@ -66,7 +76,9 @@ onBeforeUnmount(() => {
           <p><router-link to="/lua_playground">Lua Playground</router-link></p>
         </div>
         <div class="grid-item">
-          <p><router-link to="/">IN CONSTRUCTION</router-link></p>
+          <button id="theme-switch" @click="switchTheme" aria-label="Switch theme">
+            {{ currentThemeIcon }} theme
+          </button>
         </div>
       </div>
     </div>
@@ -146,5 +158,47 @@ a {
   text-decoration: none;
   width: 100%;
   display: block;
+}
+
+/* Cellule home — icône teintée par thème */
+.home-cell a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.home-cell img {
+  filter: var(--home-icon-filter);
+}
+
+p:hover,
+.home-cell:hover {
+  background-color: var(--color-bg-soft);
+}
+
+/* Bouton thème — même chrome que les cellules <p> */
+#theme-switch {
+  border: var(--border-width) solid var(--color-border);
+  padding: 0.7rem;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  background-color: var(--color-bg);
+  color: var(--color-fg);
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+}
+
+#theme-switch:hover {
+  background-color: var(--color-accent-soft);
+  color: var(--color-accent);
 }
 </style>

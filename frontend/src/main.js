@@ -7,6 +7,17 @@ import '@/assets/main.css'
 
 createApp(App).use(router).mount('#app')
 
+/* Thème : dark par défaut, persisté en localStorage, togglé via data-theme sur <html>. */
+const THEME_KEY = 'theme'
+const savedTheme = localStorage.getItem(THEME_KEY)
+document.documentElement.dataset.theme = savedTheme === 'light' ? 'light' : 'dark'
+
+export function toggleTheme() {
+  const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'
+  document.documentElement.dataset.theme = next
+  localStorage.setItem(THEME_KEY, next)
+}
+
 /**
  * Parse LaTeX math expressions using KaTeX
  *
@@ -22,7 +33,7 @@ function parseLatex(text) {
 
   let result = text
 
-  // Parse display math: $$...$$ (must be before $...)
+  // Display math d'abord : $$...$$
   result = result.replace(/\$\$([\s\S]*?)\$\$/g, (_, formula) => {
     try {
       return '<div class="katex-display">' + katex.renderToString(formula.trim(), { displayMode: true, throwOnError: false }) + '</div>'
@@ -31,7 +42,7 @@ function parseLatex(text) {
     }
   })
 
-  // Parse inline math: $...$
+  // Inline math : $...$
   result = result.replace(/\$((?!\$)((?:[^$\\]|\\.)+))\$/g, (_, formula) => {
     try {
       return katex.renderToString(formula.trim(), { displayMode: false, throwOnError: false })
@@ -57,14 +68,13 @@ export function parseObsidianLinks(content, options = { useRouterLinks: true }) 
   let processedContent = content
   const footnotes = []
 
-  // Process Obsidian image links: ![[image.jpg]] -> <img src="/images/image.jpg" alt="image.jpg" class="obsidian-image">
+  // Images : ![[image.jpg]] -> <img src="/images/...">
   processedContent = processedContent.replace(/!\[\[(.*?)\]\]/g, (_, imagePath) => {
     const path = imagePath.trim()
     return `<img src="/images/${path}" alt="${path}" class="obsidian-image">`
   })
 
-  // Process regular Obsidian links: [[Page]] -> router-link
-  // or [[Page|Custom text]] -> router-link with alias
+  // Liens : [[Page]] ou [[Page|alias]] -> <a> routé
   processedContent = processedContent.replace(/\[\[(.*?)(?:\|(.*?))?\]\]/g, (_, link, alias) => {
     const displayText = alias ? alias.trim() : link.trim()
     const trimmedLink = link.trim()
@@ -77,14 +87,13 @@ export function parseObsidianLinks(content, options = { useRouterLinks: true }) 
     }
   })
 
-  // Process footnotes: ^[footnote text] -> <sup class="footnote-ref"><a href="#footnote-1" id="footnote-ref-1">[1]</a></sup>
-  processedContent = processedContent.replace(/^\[(.*?)\]$/g, (_, footnoteText) => {
+  // Footnotes : ^[texte] -> référence numérotée + section en fin
+  processedContent = processedContent.replace(/\^\[(.*?)\]/g, (_, footnoteText) => {
     const footnoteId = footnotes.length + 1
     footnotes.push(footnoteText.trim())
     return `<sup class="footnote-ref"><a href="#footnote-${footnoteId}" id="footnote-ref-${footnoteId}">[${footnoteId}]</a></sup>`
   })
 
-  // Add footnotes section if any exist
   if (footnotes.length > 0) {
     let footnoteSection = '<hr><div class="footnotes"><ol>'
 
@@ -97,7 +106,7 @@ export function parseObsidianLinks(content, options = { useRouterLinks: true }) 
     processedContent += footnoteSection
   }
 
-  // Parse LaTeX math expressions ($...$, $$...$$)
+  // LaTeX ($...$, $$...$$)
   processedContent = parseLatex(processedContent)
 
   return processedContent

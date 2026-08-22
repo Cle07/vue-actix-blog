@@ -1,0 +1,42 @@
+/* Palette sombre — inspirée du drapeau non-binaire
+   (jaune #FCF434, blanc #FFFFFF, violet #9C59D1, noir #2C2C2C). */
+
+html[data-theme='dark'] {
+  /* Surfaces — bande noire */
+  --color-bg: #131114;
+  --color-bg-elevated: #1d1a22;
+  --color-bg-muted: #2a2532;
+  --color-bg-soft: rgba(255, 255, 255, 0.05);
+
+  /* Texte — bande blanche */
+  --color-fg: #f2eff6;
+  --color-fg-muted: #a89fb6;
+  --color-fg-subtle: #7d7488;
+
+  /* Accents — violet de la bande centrale */
+  --color-accent: #b07fe0;
+  --color-accent-soft: rgba(156, 89, 209, 0.16);
+  /* Wikilinks internes (garden) — jaune de la bande haute */
+  --color-garden: #e5cd55;
+  --color-garden-hover: #f5e07a;
+  --color-garden-soft: rgba(240, 217, 92, 0.14);
+  --color-garden-soft-hover: rgba(245, 224, 122, 0.24);
+  /* Liens externes / footnotes — violet */
+  --color-link-external: #b07fe0;
+  --color-lua: #9c59d1;
+  --color-lua-soft: rgba(156, 89, 209, 0.12);
+  --color-error: #ff8f8f;
+
+  /* Bordures */
+  --color-border: #efeaf6;
+  --color-border-muted: #362f42;
+  --color-border-subtle: #554c68;
+  --color-border-backlink: #6b6180;
+
+  /* Chrome boutons (texte sur fond plein) */
+  --color-btn-text: #131114;
+
+  /* Bouton home */
+  --home-icon-filter: brightness(0) saturate(100%) invert(100%) brightness(100%) contrast(100%);
+  --color-accent-soft-hover: rgba(156, 89, 209, 0.3);
+}

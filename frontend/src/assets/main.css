@@ -1,4 +1,6 @@
 @import './base.css';
+@import './theme-dark.css';
+@import './theme-light.css';
 
 /* Polices locales */
 @font-face {
@@ -64,7 +66,7 @@ main.app-shell > .content {
 
 /* Liens de base */
 a {
-  color: var(--color-link);
+  color: var(--color-link-external);
   text-decoration: none;
 }
 
@@ -122,7 +124,14 @@ a {
 }
 
 .markdown-content a {
-  color: var(--color-link);
+  color: var(--color-link-external);
+}
+
+/* Liens externes (markdown standard, URLs, footnotes) = accent ; wikilinks gardent --color-garden */
+.markdown-content a:not(.obsidian-link),
+.markdown-content .footnote-ref,
+.markdown-content .footnotes a {
+  color: var(--color-link-external);
 }
 
 .markdown-content a:hover {

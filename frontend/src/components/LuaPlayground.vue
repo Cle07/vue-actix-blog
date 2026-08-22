@@ -115,7 +115,7 @@ watch(code, () => {
 
 #reset-button:hover {
   background-color: var(--color-fg);
-  color: var(--color-bg);
+  color: var(--color-btn-text);
 }
 
 #code-container {
